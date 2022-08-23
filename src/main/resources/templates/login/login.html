@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Đăng nhập phần mềm nhà điều hành</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+    <!-- jQuery -->
+    <script src="/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="/dist/js/adminlte.min.js"></script>
+
+    <script type="text/javascript" src="/js/login/login.js"></script>
+    <!--Toastr-->
+    <link rel="stylesheet" th:href="@{plugins/common/toastr.css}">
+    <script th:src="@{plugins/common/toastr.js}"></script>
+<!--    <script type="text/javascript" src="/js/administration/employee.js"></script>-->
+    <style>
+        img.resizer {
+            height: 60%;
+            width: 60%;
+        }
+    </style>
+</head>
+<body>
+<div class="hold-transition login-page">
+<div class="login-box">
+    <div class="card">
+        <div class="card-body login-card-body">
+            <div class="login-logo">
+                <img class="resizer" src="dist/img/background/epasslogo.png">
+            </div>
+            <div class="alert alert-primary" id="message" style="display:none"></div>
+            <form th:action="@{/spring_security_check}" method="post" id="user">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Tên đăng nhập"
+                           name="username" id="username" required="required" oninvalid="this.setCustomValidity('Vui lòng nhập tên đăng nhập!')"
+                           oninput="setCustomValidity('')">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-user"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="password" class="form-control" placeholder="Mật khẩu"
+                           name="password" id="password" required="required" oninvalid="this.setCustomValidity('Vui lòng nhập mật khẩu!')"
+                           oninput="setCustomValidity('')">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- /.col -->
+                    <div class="col-5 mx-auto">
+                        <button id="btnSignin" type="submit" class="btn btn-primary btn-block" name="submit">Đăng nhập</button>
+                    </div>
+                </div>
+                    <a style="cursor: pointer" data-toggle="modal" href="#changePasswordModal">Đổi mật khẩu</a>
+            </form>
+        </div>
+        <!-- /.login-card-body -->
+    </div>
+</div>
+</div>
+<!-- /.login-box -->
+<!--Change password-->
+    <div class="modal fade" id="changePasswordModal" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <form action="javascript:changePasswordBeforeLogin()" method="post" id="changePassword">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="changePasswordModalLabel">Đổi mật khẩu</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="username4ChangePassword">Tên đăng nhập</label>
+                            <input type="text" class="form-control" id="username4ChangePassword"
+                                   name="username4ChangePassword" value="" required
+                                   oninvalid="this.setCustomValidity('Vui lòng nhập tên đăng nhập.')"
+                                   oninput="setCustomValidity('')" >
+                        </div>
+                        <div class="form-group">
+                            <label for="oldPassword">Mật khẩu hiện tại</label>
+                            <input type="password" class="form-control" id="oldPassword"
+                                   name="oldPassword" value="" required
+                                   oninvalid="this.setCustomValidity('Vui lòng nhập mật khẩu hiện tại.')"
+                                   oninput="setCustomValidity('')" >
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">Mật khẩu mới</label>
+                            <input type="password" class="form-control" id="newPassword"
+                                   name="newPassword" value="" required
+                                   oninvalid="this.setCustomValidity('Vui lòng nhập mật khẩu mới.')"
+                                   oninput="setCustomValidity('')" >
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmNewPassword">Xác nhận mật khẩu mới</label>
+                            <input type="password" class="form-control" id="confirmNewPassword"
+                                   name="confirmNewPassword" value="" required
+                                   oninvalid="this.setCustomValidity('Vui lòng xác nhận mật khẩu.')"
+                                   oninput="setCustomValidity('')" >
+                        </div>
+                        <div class="alert alert-info" id="resetPasswordNotifyMessage" style="display:none;"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearChangingPassword()">Thoát</button>
+                        <button type="submit" class="btn btn-primary">Lưu</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
