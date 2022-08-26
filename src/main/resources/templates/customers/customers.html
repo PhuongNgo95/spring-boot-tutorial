@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{home/homeLayouts/index.html}">
+<head>
+
+</head>
+<body>
+
+<div layout:fragment="content">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>THÔNG TIN KHÁCH HÀNG</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--row start-->
+    <section class="content">
+        <div class="container-fluid">
+            <!-- SELECT2 EXAMPLE -->
+            <div class="card card-default">
+                <div class="card-header p-0 pt-1">
+                    <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="customers" data-toggle="pill" href="#customersTabHref"
+                               role="tab" aria-selected="true">Tìm kiếm khách hàng</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="customersTabHref" role="tabpanel">
+                            <div class="row mb-2">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label for="typeReportDay">Loại khách hàng</label>
+                                        <select class="form-control select2" style="width: 100%;" id="typeReportDay">
+                                            <option value="0">Tất cả</option>
+                                            <option value="1">khách hàng cá nhân</option>
+                                            <option value="2">đại lý</option>
+                                        </select>3
+                                    </div>
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-sm-12">
+                                    <ol class="breadcrumb float-sm-right">
+                                        <button type="button" class="btn btn-primary" onclick="getCustomers()">Tìm kiếm</button>
+                                        <button type="button" class="btn btn-primary" onclick="setCustomers()">Thêm Khách hàng</button>
+                                    </ol>
+                                </div>
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+        </div>
+    </section>
+    <!--row end-->
+
+    <section>
+        <!-- Modal -->
+        <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <form action="javascript:createNewCustomer()" method="post" id="CustomerAdd">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="createModalLabel">Thêm tài khoản</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="username">Tên đăng nhập (<span
+                                                class="requireSymbol">*</span>)</label>
+                                        <input type="text" class="form-control" id="username" placeholder="Username"
+                                               name="username" required="required"
+                                               oninvalid="this.setCustomValidity('Vui lòng điền tên đăng nhập!')"
+                                               oninput="setCustomValidity('')">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="fullname">Họ tên (<span class="requireSymbol">*</span>)</label>
+                                        <input type="text" class="form-control" id="fullname" placeholder="Họ tên"
+                                               name="fullname" required="required"
+                                               oninvalid="this.setCustomValidity('Vui lòng nhập đầy đủ họ tên!')"
+                                               oninput="setCustomValidity('')">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="birthdayValue">Ngày Sinh</label>
+                                        <div class="input-group date" id="birthday"
+                                             data-target-input="nearest">
+                                            <input type="text" class="form-control datetimepicker-input"
+                                                   id="birthdayValue" data-target="#birthday" placeholder="yyyy-mm-dd"/>
+                                            <div class="input-group-append" data-target="#birthday"
+                                                 data-toggle="datetimepicker">
+                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                            </div>
+                                        </div>
+                                        <!--                                        <input type="date" class="form-control" style="width: 100%" id="birthdayValue">-->
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="text" class="form-control" id="email" placeholder="Email"
+                                               name="email">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="role_id">Vai trò chính (<span
+                                                class="requireSymbol">*</span>)</label>
+                                        <select class="form-control select2" style="width: 100%;" id="role_id"
+                                                placeholder="Vai trò">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="password">Mật khẩu (<span class="requireSymbol">*</span>)</label>
+                                        <input type="password" class="form-control" id="password" placeholder="Mật khẩu"
+                                               name="password" required="required"
+                                               oninvalid="this.setCustomValidity('Vui lòng nhập mật khẩu!')"
+                                               oninput="setCustomValidity('')">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password">Xác nhận mật khẩu (<span
+                                                class="requireSymbol">*</span>)</label>
+                                        <input type="password" class="form-control" id="confirm_password"
+                                               placeholder="Confirm Password"
+                                               name="confirm_password" required="required"
+                                               oninvalid="this.setCustomValidity('Vui lòng xác nhận mật khẩu!')"
+                                               oninput="setCustomValidity('')">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="address">Địa chỉ</label>
+                                        <input type="address" class="form-control" id="address" placeholder="Địa chỉ"
+                                               name="address">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="phone">Số điện thoại</label>
+                                        <input type="text" class="form-control" id="phone" placeholder="Số điện thoại"
+                                               name="phone">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="status">Trạng thái (<span class="requireSymbol">*</span>)</label>
+                                        <select class="form-control select2" style="width: 100%;" id="status"
+                                                placeholder="Trạng thái">
+                                            <option value="1">Đang hoạt động</option>
+                                            <option value="0">Dừng hoạt động</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="alert alert-info" id="createNewMessage" style="display:none;"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                    onclick="clearAddingUser()">Thoát
+                            </button>
+                            <button type="submit" class="btn btn-primary">Thêm</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="card">
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div id="jsGrid1"></div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+    </section>
+
+    <!-- page script -->
+    <script src="/js/customers/customers.js"></script>
+    <script>
+    </script>
+</div>
+</body>
+</html>
